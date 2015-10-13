@@ -8,6 +8,5 @@
               regexp="^{{item.key}}(\s+)?=\s?(.+)?"
               line="{{item.key}} = {{item.value}}"
               insertafter='\[mysqld\]'
-  with_dict: "{{mysqld_tunables}}"
-  when: mysqld_tunables
+  with_dict: "{{mysqld_tunables|default({})}}"
   notify: restart mysql
