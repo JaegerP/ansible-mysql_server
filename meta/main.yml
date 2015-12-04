@@ -1,0 +1,16 @@
+---
+dependencies: []
+allow_duplicates: yes
+
+galaxy_info:
+  author: "fabianfreyer"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.5.2
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+
