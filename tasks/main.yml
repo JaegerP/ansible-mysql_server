@@ -1,12 +1,14 @@
 ---
 
 - name: install mysql-server
-  apt: name=mysql-server
+  apt:
+    name: mysql-server
 
 - name: configure mysql tunables
-  lineinfile: dest=/etc/mysql/my.cnf
-              regexp="^{{item.key}}(\s+)?=\s?(.+)?"
-              line="{{item.key}} = {{item.value}}"
-              insertafter='\[mysqld\]'
-  with_dict: "{{mysqld_tunables|default({})}}"
+  lineinfile:
+    dest: '/etc/mysql/my.cnf'
+    regexp: '^{{item.key}}(\s+)?=\s?(.+)?'
+    line: '{{item.key}} = {{item.value}}'
+    insertafter: '\[mysqld\]'
+  with_dict: '{{mysqld_tunables|default({})}}'
   notify: restart mysql
