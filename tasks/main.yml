@@ -2,7 +2,31 @@
 
 - name: install mysql-server
   apt:
-    name: mysql-server
+    name: '{{ mysql_package_list }}'
+
+- name: Check if installing for the first time
+  stat:
+    path: /root/.my.cnf
+  register: my_cnf
+
+- name: Ensure mysql server is running
+  service:
+    name: mysql
+    state: started  
+  when: not my_cnf.stat.exists
+
+- name: set mysql root password
+  shell: 
+    cmd: "mysqladmin -u root password {{ mysql_root_password }}"
+  when: not my_cnf.stat.exists
+  no_log: true
+
+- name: create mysql password file
+  template:
+    src: templates/my.cnf
+    dest: /root/.my.cnf
+  when: not my_cnf.stat.exists
+  no_log: true
 
 - name: configure mysql tunables
   lineinfile:
