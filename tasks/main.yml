@@ -11,7 +11,7 @@
 
 - name: Ensure mysql server is running
   service:
-    name: mysql
+    name: "{{ mysql_service_name }}"
     state: started  
   when: not my_cnf.stat.exists
 
@@ -20,6 +20,21 @@
     cmd: "mysqladmin -u root password {{ mysql_root_password }}"
   when: not my_cnf.stat.exists
   no_log: true
+
+- name: update mysql root password for all root accounts
+  mysql_user: 
+    check_implicit_admin: yes
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: root 
+    host: "{{ item }}" 
+    password: "{{ mysql_root_password }}" 
+    priv: "*.*:ALL,GRANT"
+  with_items:
+  - "{{ ansible_fqdn }}"
+  - 127.0.0.1
+  - ::1
+  - localhost 
 
 - name: create mysql password file
   template:
